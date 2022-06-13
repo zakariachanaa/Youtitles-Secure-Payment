@@ -1,0 +1,242 @@
+<html>
+
+<head>
+  <link href="style.css" type="text/css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&display=swap" rel="stylesheet">
+
+<body>
+  <div class="main">
+
+    <div class="grid-container">
+
+      <div id="card1" class="card">
+        <div class="check-product-pr">
+          <div class="check-product-pas">
+            <input class="check-input" id="check-input-1" type="checkbox" />
+          </div>
+        </div>
+        <div role="img" aria-label="Subtitles" class="card-img img-one"></div>
+        <div class="card-body">
+          <span class="card-header">Translated Subtitles</span>
+          <span class="card-description">Please enter a short description.</span>
+          <span class="price-text">$12.00</span>
+          <label aria-hidden="false">Minutes</label>
+          <input id="amount-input-translation" value="0" min="0" max="300" class="amount-input" type="number" />
+        </div>
+      </div>
+
+
+      <div id="card2" class="card">
+        <div class="check-product-pr">
+          <div class="check-product-pas">
+            <input class="check-input" id="check-input-2" type="checkbox" />
+          </div>
+        </div>
+        <div role="img" aria-label="Subtitles" class="card-img img-two"></div>
+        <div class="card-body">
+          <span class="card-header">Subtitles</span>
+          <span class="card-description">Please enter a short description.</span>
+          <span class="price-text">$6.00</span>
+          <label aria-hidden="false">Minutes</label>
+          <input id="amount-input-subtitles"  value="0" min="0" max="300" class="amount-input" type="number" />
+        </div>
+      </div>
+      <p id="priceLabelError" style="display: none; color:red; text-align: center;">Please choose a product and enter video minutes.</p>
+
+    </div>
+    <div class="video-input-container">
+      <label class="video-label" aria-hidden="false">Video link (optional):</label>
+      <input name="descriptionInput" id="description" class="video-input" placeholder="video link (YouTube, vimeo, dailymotion..)" />
+    </div>
+
+    <span class="totalSpan">Total:</span>
+    <span class="total-amount-wrapper">$<span id="amountTotal">0</span></span>
+    <div id="smart-button-container">
+      <div id="invoiceidDiv" style="text-align: center; display: none;"><label for="invoiceid"> </label><input
+          name="invoiceid" maxlength="127" type="text" id="invoiceid" value=""></div>
+      <p id="invoiceidError" style="display: none; color:red; text-align: center;">Please enter an Invoice ID</p>
+      <div style="text-align: center; margin-top: 0.625rem;" id="paypal-button-container"></div>
+    </div>
+  </div>
+  <script src="https://www.paypal.com/sdk/js?client-id=ARF3FINRMc5XFjnoZ_TO7g-sFWht7pnhS0ODtzi3sV8yC8TuWdD74HW8eWWd3w43rvpSz7aoUtoWIBYT&enable-funding=venmo&currency=USD"
+    data-sdk-integration-source="button-factory"></script>
+  <script>
+    var amount = 0;
+    var amountInput1 = document.getElementById('amount-input-translation');
+    var amountInput2 = document.getElementById('amount-input-subtitles');
+    var card1 = document.getElementById('card1');
+    var card2 = document.getElementById('card2');
+    var check1 = document.getElementById('check-input-1');
+    var check2 = document.getElementById('check-input-2');
+    var cards = document.querySelectorAll('.card-body');
+    var amountSpan = document.getElementById('amountTotal');
+    function renderAmount() {
+      amountSpan.innerText = amount;
+    }
+    function calculateTotal() {
+      let total = 0;
+        if(check1.checked) total += (parseInt(amountInput1.value) || 0) * 12;
+        if(check2.checked) total += (parseInt(amountInput2.value) || 0) * 6;
+        amount = total;
+    }
+    function handleInputChange(input){
+      console.log('changed');
+      let amountInput, check, cardBody;
+      if(input === "input1"){
+        amountInput = amountInput1;
+        check = check1;
+        cardBody = cards[0];
+      }else{
+        amountInput = amountInput2;
+        check = check2;
+        cardBody = cards[1]
+      }
+      return (e) => {
+        if(e.target.value > 0){
+          check.checked = true;
+          cardBody.classList.toggle('card-active');
+        }else{
+          check.checked = false;
+          cardBody.classList.remove('card-active');
+        }
+        calculateTotal();
+        renderAmount();
+      }
+    }
+    function handleCardClick(card) {
+        let check = card === "card1" ? check1 : check2;
+        let cardBody = card === "card1" ? cards[0] : cards[1];
+
+        return (e) => {
+          if (e.target && e.target.nodeName == "INPUT") return;
+          if (check.checked) {
+            check.checked = false;
+          } else {
+            check.checked = true;
+          }
+          calculateTotal();
+          renderAmount();
+          cardBody.classList.toggle('card-active');
+        }
+      }
+    function handleCheckChange(check) {
+      let cardBody = check === "check1" ? cards[0] : cards[1];
+      return (e) => {
+        cardBody.classList.toggle('card-active');
+        calculateTotal();
+        renderAmount();
+      }
+    }
+    card1.addEventListener('click', handleCardClick('card1'));
+    card2.addEventListener('click', handleCardClick('card2'));
+    [check1, check2].forEach((check, i) => check.addEventListener('change', handleCheckChange('check' + (i+1))));
+    [amountInput1, amountInput2].forEach((input, i) => input.addEventListener('input', handleInputChange('input' + (i+1))));
+    function initPayPalButton() {
+      var description = document.getElementById('description');
+      //var amount = document.querySelector('#smart-button-container #amount');
+      //var descriptionError = document.querySelector('#descriptionError');
+      var priceError = document.querySelector('#priceLabelError');
+      var invoiceid = document.querySelector('#invoiceid');
+      var invoiceidError = document.querySelector('#invoiceidError');
+      var invoiceidDiv = document.querySelector('#invoiceidDiv');
+
+      var elArr = [description, amount];
+
+      if (invoiceidDiv.firstChild.innerHTML.length > 1) {
+        invoiceidDiv.style.display = "block";
+      }
+
+      var purchase_units = [];
+      purchase_units[0] = {};
+      purchase_units[0].amount = {};
+
+      function validate(event) {
+        return true;
+      }
+
+      paypal.Buttons({
+        style: {
+          color: 'gold',
+          shape: 'rect',
+          label: 'checkout',
+          layout: 'vertical',
+
+        },
+
+        onInit: function (data, actions) {
+          actions.disable();
+
+          if (invoiceidDiv.style.display === "block") {
+            elArr.push(invoiceid);
+          }
+
+          elArr.forEach(function (item) {
+            item.addEventListener('keyup', function (event) {
+              var result = elArr.every(validate);
+              if (result) {
+                actions.enable();
+              } else {
+                actions.disable();
+              }
+            });
+          });
+        },
+
+        onClick: function () {
+
+          if (amount < 1) {
+            priceError.style.display = "block";
+          } else {
+            priceError.style.display = "none";
+          }
+
+          if (invoiceid.value.length < 1 && invoiceidDiv.style.display === "block") {
+            invoiceidError.style.display = "block";
+          } else {
+            invoiceidError.style.display = "none";
+          }
+          let descriptionInfo = '';
+          if(check1.checked) descriptionInfo += 'Translation subtitles minutes: ' + amountInput1.value + ' | ';
+          if(check2.checked) descriptionInfo += 'Subtitles minutes: ' + amountInput2.value + ' | video link : ';
+          purchase_units[0].description = descriptionInfo + description.value;
+          purchase_units[0].amount.value = amount;
+
+          if (invoiceid.value !== '') {
+            purchase_units[0].invoice_id = invoiceid.value;
+          }
+        },
+
+        createOrder: function (data, actions) {
+          return actions.order.create({
+            purchase_units: purchase_units,
+          });
+        },
+
+        onApprove: function (data, actions) {
+          return actions.order.capture().then(function (orderData) {
+
+            // Full available details
+            console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+
+            // Show a success message within this page, e.g.
+            const element = document.getElementById('paypal-button-container');
+            element.innerHTML = '';
+            element.innerHTML = '<h3>Thank you for your payment!</h3>';
+
+            // Or go to another URL:  actions.redirect('thank_you.html');
+
+          });
+        },
+
+        onError: function (err) {
+          console.log(err);
+        }
+      }).render('#paypal-button-container');
+    }
+    initPayPalButton();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,121 @@
+body {
+  font-family: 'Inter', sans-serif;
+}
+.main{
+  width: 100%;
+}
+.amount-input, .video-input {
+  font-size: 1rem;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #b8bdc9;
+}
+.amount-input{
+  width: 70px;
+}
+.video-input{
+  width: 100%;
+}
+.card-active, .card-body:hover {
+  background: rgba(85, 115, 215, 0.06);
+}
+.card-body label {
+  display: block;
+  font-size: 14px;
+  opacity: 0.7;
+  line-height: 2;
+  margin-top: 5px;
+}
+.amount-input:focus, .check-input:focus, .amount-input:hover, .check-input:hover, .video-input:hover, .video-input:focus{
+  border-color: rgba(46, 105, 255, 0.5);
+  box-shadow: 0 0 0 2px rgb(46 105 255 / 25%);
+}
+.amount-input:focus, .video-input:focus{
+  outline: none !important;
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+}
+
+.img-one {
+  background:url("https://www.jotform.com/uploads/zakariachanaa96/form_files/Untitled-1-1.png") no-repeat;
+}
+.img-two {
+  background:url("https://www.jotform.com/uploads/zakariachanaa96/form_files/istockphoto-1316292532-170667a.jpeg") no-repeat;
+}
+.card-img {
+  height: 168px;
+  width: 100%;
+  border-radius: 0;
+  border: 0;
+  background-size: cover;
+  background-position: center center;
+  background-color: #F4F4F4;
+    border-bottom: 1px solid #F4F4F4;
+}
+.video-label {
+  font-weight: 600;
+  display:block;
+  margin-bottom: 8px;
+}
+.totalSpan {
+  font-weight: 600;
+}
+.video-input-container{
+  margin-top: 10px;
+  padding-bottom: 20px;
+}
+.total-amount-wrapper {
+  float: right;
+  text-align: right;
+}
+.card-body{
+  padding: 10px 0px 10px 17px;
+}
+.check-product-pas{
+  position: absolute;
+  left: 10px;
+  top: 12px !important;
+}
+.check-input {
+  width: 20px;
+  cursor: pointer;
+  height: 20px;
+}
+.check-product-pr {
+  position: relative;
+}
+.card{
+  cursor: pointer;
+  border: 1px solid #b8bdc9;
+  color: #2C3345;
+  border-radius: 4px;
+}
+.card-header {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.price-text {
+  color: #4c71fb;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.card-description {
+  font-size: 14px;
+  opacity: 0.6;
+}
+.card-body span {
+  display: block;
+  line-height: 1.5;
+}
+@media only screen and (min-width: 768px) {
+  .main{
+    width: 600px;
+    margin: auto;
+  }
+  .amount-input {
+    width: 100px;
+  }
+}
